@@ -22,12 +22,14 @@ export class LowStockAlertService {
     const currentStock = this.stockManagementService.getCurrentStock(itemId, storeId);
     const { isBelowReorder, reorderPoint } = this.thresholdsService.isBelowReorderPoint(itemId, storeId, currentStock);
     if (!isBelowReorder) return null;
+    const priority = currentStock < 0.5 * reorderPoint ? 'HIGH' : 'NORMAL';
     const alert: LowStockAlert = {
       id: randomUUID(),
       itemId,
       storeId,
       currentStock,
       reorderPoint,
+      priority,
       triggeredAt: new Date(),
       acknowledged: false,
     };
